@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+chan sigG, sigY, sigR, pedG, pedR;
+clock globalCount;
+int pedButton = 0;
+int[0,55] pcnt;
+int[0,60] cnt;
+pcnt = 0;
+cnt = 0;
+</declaration>
+	<template>
+		<name x="5" y="5">trafficlight</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id0" x="-25" y="51">
+			<name x="-34" y="17">red</name>
+			<label kind="invariant" x="-170" y="34">cnt &lt;= 60</label>
+		</location>
+		<location id="id1" x="187" y="-68">
+			<name x="212" y="-76">green</name>
+		</location>
+		<location id="id2" x="399" y="51">
+			<name x="373" y="17">pending</name>
+			<label kind="invariant" x="476" y="34">cnt &lt;= 60</label>
+		</location>
+		<location id="id3" x="187" y="144">
+			<name x="212" y="136">yellow</name>
+			<label kind="invariant" x="153" y="195">cnt &lt;= 5</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id3"/>
+			<label kind="guard" x="110" y="17">pedButton &amp;&amp; cnt &gt;= 60</label>
+			<label kind="synchronisation" x="170" y="34">sigY!</label>
+			<label kind="assignment" x="170" y="51">cnt = 0</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="-195" y="51">cnt = cnt + 1</label>
+			<nail x="-84" y="26"/>
+			<nail x="-84" y="77"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="127" y="212">cnt = cnt + 1</label>
+			<nail x="136" y="187"/>
+			<nail x="221" y="187"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="guard" x="42" y="85">cnt &gt;= 5</label>
+			<label kind="synchronisation" x="51" y="102">sigR!</label>
+			<label kind="assignment" x="51" y="119">cnt = 0</label>
+		</transition>
+		<transition id="id8">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="272" y="76">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="297" y="93">sigY!</label>
+			<label kind="assignment" x="297" y="110">cnt = 0</label>
+		</transition>
+		<transition id="id9">
+			<source ref="id2"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="459" y="51">cnt = cnt + 1</label>
+			<nail x="450" y="34"/>
+			<nail x="450" y="76"/>
+		</transition>
+		<transition id="id10">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="246" y="-42">pedButton &amp;&amp; cnt &lt; 60</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="102" y="-153">!pedButton &amp;&amp; cnt &lt; 60</label>
+			<label kind="assignment" x="136" y="-136">cnt = cnt + 1</label>
+			<nail x="221" y="-102"/>
+			<nail x="153" y="-102"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="0" y="-42">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="25" y="-25">sigG!</label>
+			<label kind="assignment" x="17" y="-8">cnt = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>crosswalk</name>
+		<location id="id13" x="-510" y="-178">
+			<name x="-527" y="-212">green</name>
+		</location>
+		<location id="id14" x="-348" y="-178">
+			<name x="-357" y="-212">red</name>
+		</location>
+		<location id="id15" x="-425" y="-144">
+			<committed/>
+		</location>
+		<init ref="id13"/>
+		<transition id="id16">
+			<source ref="id15"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-484" y="-153">pedG!</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id14"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-399" y="-153">sigR?</label>
+			<label kind="assignment" x="-450" y="-119">pcnt=0</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id13"/>
+			<target ref="id13"/>
+			<label kind="guard" x="-646" y="-204">pcnt &lt; 55</label>
+			<label kind="assignment" x="-663" y="-187">pcnt = pcnt + 1</label>
+			<nail x="-569" y="-212"/>
+			<nail x="-570" y="-144"/>
+		</transition>
+		<transition id="id19">
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="guard" x="-459" y="-263">pcnt &gt;= 55</label>
+			<label kind="synchronisation" x="-433" y="-246">pedR!</label>
+			<nail x="-416" y="-229"/>
+		</transition>
+	</template>
+	<system>// List one or more processes to be composed into a system.
+system trafficlight, crosswalk;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
