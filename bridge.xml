@@ -28,29 +28,44 @@ clock time;		// Global time
 		<location id="id2" x="64" y="216">
 		</location>
 		<location id="id3" x="64" y="80">
-			<name x="56" y="48">unsafe</name>
+			<name x="-8" y="68">unsafe</name>
+		</location>
+		<location id="id4" x="484" y="-8">
+			<name x="459" y="-42">valley</name>
 		</location>
 		<init ref="id3"/>
-		<transition id="id4">
+		<transition id="id5">
+			<source ref="id4"/>
+			<target ref="id1"/>
+			<label kind="guard" x="493" y="93">y&gt;=4*delay</label>
+			<nail x="484" y="212"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id3"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="289" y="-34">y=0</label>
+			<nail x="161" y="-8"/>
+		</transition>
+		<transition id="id7">
 			<source ref="id2"/>
 			<target ref="id3"/>
 			<label kind="guard" x="72" y="176">y &gt;= delay</label>
 			<label kind="synchronisation" x="72" y="120">release!</label>
 		</transition>
-		<transition id="id5">
+		<transition id="id8">
 			<source ref="id1"/>
 			<target ref="id2"/>
 			<label kind="guard" x="208" y="224">L == 1</label>
 			<label kind="synchronisation" x="216" y="192">take !</label>
 			<label kind="assignment" x="104" y="224">y = 0</label>
 		</transition>
-		<transition id="id6">
+		<transition id="id9">
 			<source ref="id0"/>
 			<target ref="id1"/>
 			<label kind="guard" x="296" y="112">y &gt;= delay</label>
 			<label kind="synchronisation" x="296" y="160">release!</label>
 		</transition>
-		<transition id="id7">
+		<transition id="id10">
 			<source ref="id3"/>
 			<target ref="id0"/>
 			<label kind="guard" x="120" y="56">L == 0</label>
@@ -60,42 +75,42 @@ clock time;		// Global time
 	</template>
 	<template>
 		<name x="32" y="-16">Torch</name>
-		<location id="id8" x="200" y="192">
+		<location id="id11" x="200" y="192">
 			<name x="192" y="200">one</name>
 		</location>
-		<location id="id9" x="200" y="48">
+		<location id="id12" x="200" y="48">
 			<urgent/>
 		</location>
-		<location id="id10" x="64" y="120">
+		<location id="id13" x="64" y="120">
 			<name x="48" y="88">free</name>
 		</location>
-		<location id="id11" x="336" y="120">
+		<location id="id14" x="336" y="120">
 			<name x="328" y="88">two</name>
 		</location>
-		<init ref="id10"/>
-		<transition id="id12">
-			<source ref="id10"/>
-			<target ref="id9"/>
+		<init ref="id13"/>
+		<transition id="id15">
+			<source ref="id13"/>
+			<target ref="id12"/>
 			<label kind="synchronisation" x="104" y="56">take?</label>
 		</transition>
-		<transition id="id13">
-			<source ref="id9"/>
-			<target ref="id8"/>
-		</transition>
-		<transition id="id14">
-			<source ref="id9"/>
+		<transition id="id16">
+			<source ref="id12"/>
 			<target ref="id11"/>
+		</transition>
+		<transition id="id17">
+			<source ref="id12"/>
+			<target ref="id14"/>
 			<label kind="synchronisation" x="264" y="56">take?</label>
 		</transition>
-		<transition id="id15">
-			<source ref="id8"/>
-			<target ref="id10"/>
+		<transition id="id18">
+			<source ref="id11"/>
+			<target ref="id13"/>
 			<label kind="synchronisation" x="96" y="176">release?</label>
 			<label kind="assignment" x="32" y="144">L = 1 - L</label>
 		</transition>
-		<transition id="id16">
-			<source ref="id11"/>
-			<target ref="id8"/>
+		<transition id="id19">
+			<source ref="id14"/>
+			<target ref="id11"/>
 			<label kind="synchronisation" x="256" y="176">release?</label>
 		</transition>
 	</template>
@@ -166,7 +181,7 @@ system Viking1, Viking2, Viking3, Viking4, Viking5, Torch;</system>
 			<formula>E&lt;&gt; (Viking1.safe and Viking2.safe and Viking3.safe and Viking4.safe and Viking5.safe)</formula>
 			<comment/>
 			<option key="--diagnostic" value="2"/>
-			<result outcome="success" type="quality" timestamp="2025-03-28 16:43:34 -0400">
+			<result outcome="success" type="quality" timestamp="2025-03-31 14:16:02 -0400">
 				<option key="--diagnostic" value="2"/>
 			</result>
 		</query>
