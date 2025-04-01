@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+broadcast chan sigG, sigY, sigR, pedG, pedR, pedButton;
+clock globalCount, pcnt, cnt;
+
+// Testing variable for property h &amp; i of problem b.2.
+int sigGCount = 0;
+</declaration>
+	<template>
+		<name>pedSimulator</name>
+		<location id="id0" x="-467" y="-264" color="#ff0000">
+			<name x="-476" y="-297">low</name>
+		</location>
+		<location id="id1" x="-467" y="-102" color="#00ff00">
+			<name x="-484" y="-68">high</name>
+		</location>
+		<branchpoint id="id2" x="-441" y="-179"/>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-501" y="-51">pedButton!</label>
+			<nail x="-442" y="-76"/>
+			<nail x="-493" y="-76"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-544" y="-187">pedG?</label>
+			<nail x="-493" y="-178"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-416" y="-187">pedButton!</label>
+			<label kind="probability" x="-390" y="-170">0.5</label>
+		</transition>
+		<transition id="id6" controllable="false">
+			<source ref="id0"/>
+			<target ref="id2"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">trafficlight</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id7" x="-178" y="51" color="#ff0000">
+			<name x="-187" y="17">red</name>
+			<label kind="invariant" x="-212" y="76">cnt &lt;= 60</label>
+		</location>
+		<location id="id8" x="187" y="-68" color="#00ff00">
+			<name x="170" y="-153">green</name>
+		</location>
+		<location id="id9" x="527" y="42" color="#a9a9a9">
+			<name x="501" y="0">pending</name>
+			<label kind="invariant" x="493" y="59">cnt &lt;= 60</label>
+		</location>
+		<location id="id10" x="187" y="127" color="#ffff00">
+			<name x="161" y="144">yellow</name>
+			<label kind="invariant" x="153" y="161">cnt &lt;= 5</label>
+		</location>
+		<location id="id11" x="187" y="42">
+			<urgent/>
+		</location>
+		<init ref="id7"/>
+		<transition id="id12">
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="guard" x="153" y="-136">cnt &lt; 60</label>
+			<nail x="170" y="-110"/>
+			<nail x="212" y="-110"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-136" y="-102">globalCount &lt;= 3000 and cnt &gt;= 60</label>
+			<label kind="synchronisation" x="-17" y="-85">sigG!</label>
+			<label kind="assignment" x="-153" y="-68">cnt = 0, sigGCount = sigGCount + 1</label>
+			<label kind="comments" x="-484" y="-161">globalCount is guarded to prevent crashing when testing property h of b.2.
+
+sigGCount is for testing property h &amp; i.</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id11"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="144" y="68">sigY!</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id8"/>
+			<target ref="id11"/>
+			<label kind="guard" x="102" y="-25">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="102" y="-8">pedButton?</label>
+			<label kind="assignment" x="102" y="9">cnt = 0</label>
+		</transition>
+		<transition id="id16">
+			<source ref="id10"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-34" y="102">cnt &gt;= 5</label>
+			<label kind="synchronisation" x="-17" y="119">sigR!</label>
+			<label kind="assignment" x="-25" y="136">cnt = 0</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="guard" x="331" y="102">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="348" y="119">sigY!</label>
+			<label kind="assignment" x="348" y="136">cnt = 0</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="323" y="-68">cnt &lt; 60</label>
+			<label kind="synchronisation" x="315" y="-52">pedButton?</label>
+		</transition>
+	</template>
+	<template>
+		<name>crosswalk</name>
+		<location id="id19" x="-510" y="-178" color="#00ff00">
+			<name x="-527" y="-212">green</name>
+			<label kind="invariant" x="-612" y="-187">pcnt &lt;= 55</label>
+		</location>
+		<location id="id20" x="-348" y="-178" color="#ff0000">
+			<name x="-357" y="-212">red</name>
+		</location>
+		<location id="id21" x="-425" y="-144">
+			<urgent/>
+		</location>
+		<init ref="id19"/>
+		<transition id="id22">
+			<source ref="id21"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-484" y="-153">pedG!</label>
+		</transition>
+		<transition id="id23">
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<label kind="synchronisation" x="-391" y="-161">sigR?</label>
+			<label kind="assignment" x="-391" y="-144">pcnt=0</label>
+		</transition>
+		<transition id="id24">
+			<source ref="id19"/>
+			<target ref="id20"/>
+			<label kind="guard" x="-468" y="-263">pcnt &gt;= 55</label>
+			<label kind="synchronisation" x="-442" y="-246">pedR!</label>
+			<nail x="-425" y="-229"/>
+		</transition>
+	</template>
+	<system>// List one or more processes to be composed into a system.
+system trafficlight, crosswalk, pedSimulator;
+</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; (globalCount == 70 and trafficlight.pending)</formula>
+			<comment>(a)</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:37 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.green and crosswalk.green)</formula>
+			<comment>(b)</comment>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 15:22:39 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.pending and cnt &gt; 90)</formula>
+			<comment>(c)</comment>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 15:22:40 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.pending and cnt &gt;= 55)</formula>
+			<comment>(d)</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:42 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.pending and cnt &gt;= 65)</formula>
+			<comment>(e)</comment>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 15:22:43 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (crosswalk.red and trafficlight.green)</formula>
+			<comment>(f)</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:45 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (crosswalk.red and !(trafficlight.green))</formula>
+			<comment>(g)</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:46 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (globalCount &lt;= 300 and sigGCount == 3)</formula>
+			<comment>(h) current issue where int declaration too small for sigGCount, cannot use double for synthesis</comment>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 15:22:47 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (globalCount &lt;= 400 and sigGCount == 3)</formula>
+			<comment>(i) current issue where int declaration too small for sigGCount, cannot use double for synthesis</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:48 -0400">
+			</result>
+		</query>
+	</queries>
+</nta>

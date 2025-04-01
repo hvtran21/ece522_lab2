@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+broadcast chan sigG, sigY, sigR, pedG, pedR, pedButton;
+
+// globalCount is global clock count
+// pcnt counts the crosswalk timer
+// cnt is trafficwalk timer
+// wcnt is pedestrian walking timer
+clock globalCount, pcnt, cnt;
+
+// Pedestrian cross time
+int pedCrossTime = 60;
+
+</declaration>
+	<template>
+		<name>pedSimulator</name>
+		<location id="id0" x="-553" y="-365" color="#ff0000">
+			<name x="-563" y="-399">idle</name>
+		</location>
+		<location id="id1" x="-391" y="-433" color="#ffff00">
+			<name x="-416" y="-416">waiting</name>
+		</location>
+		<location id="id2" x="-221" y="-365" color="#00ff00">
+			<name x="-195" y="-391">crossing</name>
+			<label kind="invariant" x="-195" y="-374">pcnt &lt;= pedCrossTime</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-425" y="-484">pedButton!</label>
+			<nail x="-408" y="-459"/>
+			<nail x="-374" y="-459"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-459" y="-357">pcnt &gt;= pedCrossTime</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-340" y="-450">pedG?</label>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-510" y="-450">pedButton!</label>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">trafficlight</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id7" x="-212" y="-118" color="#ff0000">
+			<name x="-221" y="-152">red</name>
+			<label kind="invariant" x="-246" y="-93">cnt &lt;= 60</label>
+		</location>
+		<location id="id8" x="153" y="-237" color="#00ff00">
+			<name x="136" y="-331">green</name>
+		</location>
+		<location id="id9" x="493" y="-127" color="#a9a9a9">
+			<name x="484" y="-161">pending</name>
+			<label kind="invariant" x="459" y="-110">cnt &lt;= 60</label>
+		</location>
+		<location id="id10" x="153" y="-42" color="#ffff00">
+			<name x="127" y="-25">yellow</name>
+			<label kind="invariant" x="119" y="-8">cnt &lt;= 5</label>
+		</location>
+		<location id="id11" x="153" y="-110">
+			<urgent/>
+		</location>
+		<init ref="id7"/>
+		<transition id="id12">
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="guard" x="127" y="-314">cnt &lt; 60</label>
+			<nail x="136" y="-272"/>
+			<nail x="170" y="-272"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-76" y="-238">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="-59" y="-221">sigG!</label>
+			<label kind="assignment" x="-68" y="-204">cnt = 0</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id11"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="102" y="-93">sigY!</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id8"/>
+			<target ref="id11"/>
+			<label kind="guard" x="68" y="-187">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="68" y="-170">pedButton?</label>
+			<label kind="assignment" x="85" y="-153">cnt = 0</label>
+			<nail x="153" y="-127"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id10"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-68" y="-67">cnt &gt;= 5</label>
+			<label kind="synchronisation" x="-59" y="-50">sigR!</label>
+			<label kind="assignment" x="-59" y="-33">cnt = 0</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="guard" x="297" y="-67">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="314" y="-50">sigY!</label>
+			<label kind="assignment" x="314" y="-33">cnt = 0</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="263" y="-238">cnt &lt; 60</label>
+			<label kind="synchronisation" x="263" y="-221">pedButton?</label>
+		</transition>
+	</template>
+	<template>
+		<name>crosswalk</name>
+		<location id="id19" x="-510" y="-178" color="#00ff00">
+			<name x="-527" y="-212">green</name>
+			<label kind="invariant" x="-620" y="-187">pcnt &lt;= 55</label>
+		</location>
+		<location id="id20" x="-348" y="-178" color="#ff0000">
+			<name x="-357" y="-212">red</name>
+		</location>
+		<location id="id21" x="-425" y="-144">
+			<urgent/>
+		</location>
+		<init ref="id19"/>
+		<transition id="id22">
+			<source ref="id21"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="-484" y="-153">pedG!</label>
+		</transition>
+		<transition id="id23">
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<label kind="synchronisation" x="-391" y="-161">sigR?</label>
+			<label kind="assignment" x="-391" y="-144">pcnt=0</label>
+		</transition>
+		<transition id="id24">
+			<source ref="id19"/>
+			<target ref="id20"/>
+			<label kind="guard" x="-468" y="-263">pcnt &gt;= 55</label>
+			<label kind="synchronisation" x="-442" y="-246">pedR!</label>
+			<nail x="-425" y="-229"/>
+		</transition>
+	</template>
+	<system>// List one or more processes to be composed into a system.
+system trafficlight, crosswalk, pedSimulator;
+</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; (crosswalk.red and pedSimulator.crossing)</formula>
+			<comment>Crosswalk will turn red at 55s while pedestrian is walking, but trafficlight is not green yet.</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 14:49:43 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (pedSimulator.crossing and trafficlight.green)</formula>
+			<comment>Trafficlight is green while pedestrian is crossing because pedestrian took 60s or longer to cross.</comment>
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:05:22 -0400">
+			</result>
+		</query>
+	</queries>
+</nta>
