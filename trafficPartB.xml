@@ -2,143 +2,214 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-chan sigG, sigY, sigR, pedG, pedR;
-clock globalCount;
-int pedButton = 0;
-int[0,55] pcnt;
-int[0,60] cnt;
-pcnt = 0;
-cnt = 0;
-</declaration>
+broadcast chan sigG, sigY, sigR, pedG, pedR, pedButton;
+clock globalCount, pcnt, cnt;
+int pedButtonValue = 0;</declaration>
+	<template>
+		<name>pedSimulator</name>
+		<location id="id0" x="-467" y="-264">
+			<name x="-518" y="-273">low</name>
+		</location>
+		<location id="id1" x="-467" y="-102">
+			<name x="-493" y="-76">high</name>
+		</location>
+		<branchpoint id="id2" x="-441" y="-179"/>
+		<init ref="id0"/>
+		<transition id="id3">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-578" y="-187">pedG?</label>
+			<label kind="assignment" x="-637" y="-161">pedButtonValue = 0</label>
+			<nail x="-493" y="-178"/>
+		</transition>
+		<transition id="id4">
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-408" y="-229">pedButton!</label>
+			<label kind="assignment" x="-425" y="-212">pedButtonValue = 1</label>
+			<label kind="probability" x="-383" y="-195">0.6</label>
+		</transition>
+		<transition id="id5" controllable="false">
+			<source ref="id0"/>
+			<target ref="id2"/>
+		</transition>
+	</template>
 	<template>
 		<name x="5" y="5">trafficlight</name>
 		<declaration>// Place local declarations here.
 </declaration>
-		<location id="id0" x="-25" y="51">
-			<name x="-34" y="17">red</name>
-			<label kind="invariant" x="-170" y="34">cnt &lt;= 60</label>
+		<location id="id6" x="-178" y="51">
+			<name x="-187" y="17">red</name>
+			<label kind="invariant" x="-212" y="76">cnt &lt;= 60</label>
 		</location>
-		<location id="id1" x="187" y="-68">
-			<name x="212" y="-76">green</name>
+		<location id="id7" x="187" y="-68">
+			<name x="212" y="-85">green</name>
 		</location>
-		<location id="id2" x="399" y="51">
-			<name x="373" y="17">pending</name>
-			<label kind="invariant" x="476" y="34">cnt &lt;= 60</label>
+		<location id="id8" x="527" y="42">
+			<name x="518" y="8">pending</name>
+			<label kind="invariant" x="493" y="59">cnt &lt;= 60</label>
 		</location>
-		<location id="id3" x="187" y="144">
-			<name x="212" y="136">yellow</name>
-			<label kind="invariant" x="153" y="195">cnt &lt;= 5</label>
+		<location id="id9" x="187" y="127">
+			<name x="212" y="119">yellow</name>
+			<label kind="invariant" x="161" y="153">cnt &lt;= 5</label>
 		</location>
-		<init ref="id0"/>
-		<transition id="id4">
-			<source ref="id1"/>
-			<target ref="id3"/>
-			<label kind="guard" x="110" y="17">pedButton &amp;&amp; cnt &gt;= 60</label>
-			<label kind="synchronisation" x="170" y="34">sigY!</label>
-			<label kind="assignment" x="170" y="51">cnt = 0</label>
-		</transition>
-		<transition id="id5">
-			<source ref="id0"/>
-			<target ref="id0"/>
-			<label kind="assignment" x="-195" y="51">cnt = cnt + 1</label>
-			<nail x="-84" y="26"/>
-			<nail x="-84" y="77"/>
-		</transition>
-		<transition id="id6">
-			<source ref="id3"/>
-			<target ref="id3"/>
-			<label kind="assignment" x="127" y="212">cnt = cnt + 1</label>
-			<nail x="136" y="187"/>
-			<nail x="221" y="187"/>
-		</transition>
-		<transition id="id7">
-			<source ref="id3"/>
-			<target ref="id0"/>
-			<label kind="guard" x="42" y="85">cnt &gt;= 5</label>
-			<label kind="synchronisation" x="51" y="102">sigR!</label>
-			<label kind="assignment" x="51" y="119">cnt = 0</label>
-		</transition>
-		<transition id="id8">
-			<source ref="id2"/>
-			<target ref="id3"/>
-			<label kind="guard" x="272" y="76">cnt &gt;= 60</label>
-			<label kind="synchronisation" x="297" y="93">sigY!</label>
-			<label kind="assignment" x="297" y="110">cnt = 0</label>
-		</transition>
-		<transition id="id9">
-			<source ref="id2"/>
-			<target ref="id2"/>
-			<label kind="assignment" x="459" y="51">cnt = cnt + 1</label>
-			<nail x="450" y="34"/>
-			<nail x="450" y="76"/>
-		</transition>
-		<transition id="id10">
-			<source ref="id1"/>
-			<target ref="id2"/>
-			<label kind="guard" x="246" y="-42">pedButton &amp;&amp; cnt &lt; 60</label>
-		</transition>
+		<location id="id10" x="187" y="-272">
+			<committed/>
+		</location>
+		<init ref="id6"/>
 		<transition id="id11">
-			<source ref="id1"/>
-			<target ref="id1"/>
-			<label kind="guard" x="102" y="-153">!pedButton &amp;&amp; cnt &lt; 60</label>
-			<label kind="assignment" x="136" y="-136">cnt = cnt + 1</label>
-			<nail x="221" y="-102"/>
-			<nail x="153" y="-102"/>
+			<source ref="id7"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-42" y="17">pedButtonValue &amp;&amp; cnt &gt;= 60</label>
+			<label kind="synchronisation" x="136" y="34">sigY!</label>
+			<label kind="assignment" x="119" y="50">cnt = 0</label>
 		</transition>
 		<transition id="id12">
-			<source ref="id0"/>
-			<target ref="id1"/>
-			<label kind="guard" x="0" y="-42">cnt &gt;= 60</label>
-			<label kind="synchronisation" x="25" y="-25">sigG!</label>
-			<label kind="assignment" x="17" y="-8">cnt = 0</label>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<nail x="161" y="153"/>
+			<nail x="212" y="153"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<nail x="569" y="25"/>
+			<nail x="569" y="59"/>
+		</transition>
+		<transition id="id14">
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<nail x="-221" y="17"/>
+			<nail x="-221" y="68"/>
+		</transition>
+		<transition id="id15">
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<nail x="212" y="-102"/>
+			<nail x="153" y="-102"/>
+		</transition>
+		<transition id="id16">
+			<source ref="id10"/>
+			<target ref="id8"/>
+			<label kind="guard" x="374" y="-127">pedButtonValue &amp;&amp; (cnt&lt;60)</label>
+		</transition>
+		<transition id="id17">
+			<source ref="id10"/>
+			<target ref="id7"/>
+			<label kind="guard" x="127" y="-153">!pedButtonValue</label>
+		</transition>
+		<transition id="id18">
+			<source ref="id9"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-34" y="102">cnt &gt;= 5</label>
+			<label kind="synchronisation" x="-25" y="119">sigR!</label>
+			<label kind="assignment" x="-25" y="136">cnt = 0</label>
+		</transition>
+		<transition id="id19">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="331" y="102">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="348" y="119">sigY!</label>
+			<label kind="assignment" x="348" y="136">cnt = 0</label>
+		</transition>
+		<transition id="id20">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="263" y="25">pedButtonValue &amp;&amp; cnt &lt; 60</label>
+		</transition>
+		<transition id="id21">
+			<source ref="id6"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-76" y="-161">cnt &gt;= 60</label>
+			<label kind="synchronisation" x="-51" y="-144">sigG!</label>
+			<label kind="assignment" x="-59" y="-127">cnt = 0</label>
 		</transition>
 	</template>
 	<template>
 		<name>crosswalk</name>
-		<location id="id13" x="-510" y="-178">
+		<location id="id22" x="-510" y="-178">
 			<name x="-527" y="-212">green</name>
+			<label kind="invariant" x="-663" y="-187">pcnt &lt;= 55</label>
 		</location>
-		<location id="id14" x="-348" y="-178">
+		<location id="id23" x="-348" y="-178">
 			<name x="-357" y="-212">red</name>
 		</location>
-		<location id="id15" x="-425" y="-144">
+		<location id="id24" x="-425" y="-144">
 			<committed/>
 		</location>
-		<init ref="id13"/>
-		<transition id="id16">
-			<source ref="id15"/>
-			<target ref="id13"/>
+		<init ref="id22"/>
+		<transition id="id25">
+			<source ref="id24"/>
+			<target ref="id22"/>
 			<label kind="synchronisation" x="-484" y="-153">pedG!</label>
 		</transition>
-		<transition id="id17">
-			<source ref="id14"/>
-			<target ref="id15"/>
-			<label kind="synchronisation" x="-399" y="-153">sigR?</label>
-			<label kind="assignment" x="-450" y="-119">pcnt=0</label>
+		<transition id="id26">
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="synchronisation" x="-391" y="-161">sigR?</label>
+			<label kind="assignment" x="-391" y="-144">pcnt=0</label>
 		</transition>
-		<transition id="id18">
-			<source ref="id13"/>
-			<target ref="id13"/>
-			<label kind="guard" x="-646" y="-204">pcnt &lt; 55</label>
-			<label kind="assignment" x="-663" y="-187">pcnt = pcnt + 1</label>
+		<transition id="id27">
+			<source ref="id22"/>
+			<target ref="id22"/>
 			<nail x="-569" y="-212"/>
 			<nail x="-570" y="-144"/>
 		</transition>
-		<transition id="id19">
-			<source ref="id13"/>
-			<target ref="id14"/>
+		<transition id="id28">
+			<source ref="id22"/>
+			<target ref="id23"/>
 			<label kind="guard" x="-459" y="-263">pcnt &gt;= 55</label>
 			<label kind="synchronisation" x="-433" y="-246">pedR!</label>
 			<nail x="-416" y="-229"/>
 		</transition>
 	</template>
 	<system>// List one or more processes to be composed into a system.
-system trafficlight, crosswalk;
+system trafficlight, crosswalk, pedSimulator;
 </system>
 	<queries>
 		<query>
-			<formula/>
+			<formula>E&lt;&gt; (trafficlight.pending &amp;&amp; globalCount == 70)
+</formula>
 			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-04-01 00:00:52 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; ((trafficlight.green || trafficlight.pending) &amp;&amp; crosswalk.green)</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 00:00:57 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.green &amp;&amp; cnt &gt;= 115)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-04-01 00:01:05 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.pending &amp;&amp; cnt &gt;= 55)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-04-01 00:01:11 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (crosswalk.red &amp;&amp; !(trafficlight.green || trafficlight.pending))
+</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2025-04-01 00:01:13 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; ((trafficlight.green || trafficlight.pending) &amp;&amp; !crosswalk.red)</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 00:01:39 -0400">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (trafficlight.yellow &amp;&amp; cnt &gt;= 30)</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2025-04-01 00:01:45 -0400">
+			</result>
 		</query>
 	</queries>
 </nta>
