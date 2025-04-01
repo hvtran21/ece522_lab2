@@ -78,9 +78,9 @@ int sigGCount = 0;
 			<label kind="guard" x="-136" y="-102">globalCount &lt;= 3000 and cnt &gt;= 60</label>
 			<label kind="synchronisation" x="-17" y="-85">sigG!</label>
 			<label kind="assignment" x="-153" y="-68">cnt = 0, sigGCount = sigGCount + 1</label>
-			<label kind="comments" x="-484" y="-161">globalCount is guarded to prevent crashing when testing property h of b.2.
+			<label kind="comments" x="-484" y="-170">globalCount is guarded to prevent crashing when testing property h of b.2.
 
-sigGCount is for testing property h &amp; i.</label>
+sigGCount is for testing properties h &amp; i in problem b.2.</label>
 		</transition>
 		<transition id="id14">
 			<source ref="id11"/>
@@ -164,15 +164,15 @@ system trafficlight, crosswalk, pedSimulator;
 			</result>
 		</query>
 		<query>
-			<formula>E&lt;&gt; (trafficlight.pending and cnt &gt; 90)</formula>
+			<formula>E&lt;&gt; (trafficlight.green and cnt &gt; 90)</formula>
 			<comment>(c)</comment>
-			<result outcome="failure" type="quality" timestamp="2025-04-01 15:22:40 -0400">
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:35:44 -0400">
 			</result>
 		</query>
 		<query>
 			<formula>E&lt;&gt; (trafficlight.pending and cnt &gt;= 55)</formula>
 			<comment>(d)</comment>
-			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:42 -0400">
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:36:35 -0400">
 			</result>
 		</query>
 		<query>
@@ -196,14 +196,26 @@ system trafficlight, crosswalk, pedSimulator;
 		<query>
 			<formula>E&lt;&gt; (globalCount &lt;= 300 and sigGCount == 3)</formula>
 			<comment>(h) current issue where int declaration too small for sigGCount, cannot use double for synthesis</comment>
-			<result outcome="failure" type="quality" timestamp="2025-04-01 15:22:47 -0400">
+			<result outcome="failure" type="quality" timestamp="2025-04-01 15:43:23 -0400">
 			</result>
 		</query>
 		<query>
 			<formula>E&lt;&gt; (globalCount &lt;= 400 and sigGCount == 3)</formula>
 			<comment>(i) current issue where int declaration too small for sigGCount, cannot use double for synthesis</comment>
-			<result outcome="success" type="quality" timestamp="2025-04-01 15:22:48 -0400">
+			<result outcome="success" type="quality" timestamp="2025-04-01 15:43:24 -0400">
 			</result>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
 		</query>
 	</queries>
 </nta>
